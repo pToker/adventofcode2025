@@ -1,28 +1,49 @@
-import requests
 import functools
+from math import floor
+
+# lock parameters
+min_num = 0
+max_num = 99
+lock_positions = len(range(min_num, max_num+1))
+
+# game parameters
+start_at = 50
+
+# variables
+positions = [start_at]
+clicks = 0
 
 
 @functools.lru_cache(maxsize=None)
-def get_position(position):
-    return position % 100
+def get_position(abs_position: int = start_at) -> int:
+    return int(abs_position % 100)
 
-start_at = 50
-positions = [start_at]
-zeroes = 0
 
-# read input file input/day1/input1.txt line by line
+def count_clicks(position, move):
+    rounds = abs(move)//lock_positions
+
+    if position == 0:
+        return rounds
+
+    remaining_move = move - rounds * lock_positions if move > 0 else move + rounds * lock_positions
+    new_position = position + remaining_move
+    
+    if move > 0: # move right
+        click = 1 if new_position > 99 else 0
+    else: # move left
+        click = 1 if new_position < 1 else 0
+
+
+    return click + rounds
+
+
 with open('input/day1/input1.txt', 'r', encoding='utf-8') as file:
     for txt_line in file:
         line = txt_line.strip()
-        position = get_position(positions[-1] + (int(line[1:]) if line[0] == 'R' else -int(line[1:])))
-        positions.append(position)
-        zeroes += 1 if position == 0 else 0
-       
-
-# print(f"positions: {positions}")
-print(f"zeroes: {zeroes}")
+        move = int(line[1:]) if line[0] == 'R' else -int(line[1:])
+        positions.append(get_position(positions[-1]+move))
+        clicks += count_clicks(positions[-2], move)
 
 
-############################ part 2 #########################################################
-
-# c u later
+print(f"positions: {positions}")
+print(f"clicks: {clicks}")
