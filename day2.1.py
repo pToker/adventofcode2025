@@ -33,8 +33,6 @@ with open('input/day2/input1.txt', 'r', encoding='utf-8') as file:
     # print(f"{raw_input=}")
 
     ranges = raw_input.split(',')
-    # ranges = ['2010-2030','111 -222']
-    # print(f"{ranges=}")
 
     invalid_ids = []
 
@@ -47,6 +45,8 @@ with open('input/day2/input1.txt', 'r', encoding='utf-8') as file:
         # print(f"Looking for duplicats in {num_range=} (so between {range_start=} and {range_end=}")
 
         for number in range(range_start,range_end+1):
+            if number < 11:
+                continue
             str_num = str(number)
             n = digits = len(str_num)
 
@@ -59,6 +59,8 @@ with open('input/day2/input1.txt', 'r', encoding='utf-8') as file:
 
 
 print(invalid_ids)
+print(f"{len(invalid_ids)=}")
+print(f"{len(set(invalid_ids))=}") # just in case there would be duplicates for some reason
 
 print(f"sum of invalid IDs: {sum(invalid_ids)=}")
 
