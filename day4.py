@@ -2,8 +2,12 @@
 # The forklifts can only access a roll of paper if there are *fewer than four rolls of paper in the eight adjacent positions*.
 # If you can figure out which rolls of paper the forklifts can access, they'll spend less time looking and more time breaking down the wall to the cafeteria.
 
+# result 1: 1393
+# result 2: 8643
+
 warehouse = []
 accessible = 0
+round_accessible = 1
 def range_count(y: int, x: int, neigh_l_r: set):
     values = []
     l = x-neigh_l_r[0]
@@ -34,12 +38,17 @@ h = len(warehouse)
 x_range = range(0,w)
 y_range = range(0,h)
 
-for idx, line in enumerate(warehouse):
-    for ix, spot in enumerate(line):
-        if spot == 0: # skip empty spots
-            continue
-        print(f"{spot} at {ix=},{idx=} has {count_neighbours(ix, idx)=}")
-        if count_neighbours(ix, idx) < 4:
-            accessible += 1
+while round_accessible > 0:
+    round_accessible = 0
+    for idx, line in enumerate(warehouse):
+        for ix, spot in enumerate(line):
+            if spot == 0: # skip empty spots
+                continue
+            print(f"{spot} at {ix=},{idx=} has {count_neighbours(ix, idx)=}")
+            if count_neighbours(ix, idx) < 4:
+                accessible += 1
+                round_accessible += 1
+                
+                warehouse[idx][ix] = 0 # remove @ from that location
 
 print(f"{accessible=} @ are accessible")
